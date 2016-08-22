@@ -1,17 +1,20 @@
 package org.nabsha.camel.giraphe;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.Component;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.FromDefinition;
-import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.spi.ComponentResolver;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.nabsha.camel.giraphe.jolokia.JolokiaClient;
+import org.nabsha.camel.giraphe.jolokia.JolokiaClientBuilder;
+import org.nabsha.camel.giraphe.puml.RouteDefinitionPumlActivityImpl;
 
-import java.util.List;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by nabeel on 2/05/16.
@@ -66,10 +69,35 @@ public class RouteDefinitionVisitorTest extends CamelTestSupport {
     @Test
     public void testRoute() {
         System.out.println(context.getRouteDefinitions());
+        CamelContext newContext = new DefaultCamelContext();
 
-        Visitor visitor = new PlantUmlRouteDefinitionVisitorImpl();
-        System.out.println(visitor.visit(context));
+
+        for (RouteDefinition def: context.getRouteDefinitions()) {
+            try {
+                ModelHelper.createModelFromXml(newContext, ModelHelper.dumpModelAsXml(context, def), RouteDefinition.class);
+            } catch (JAXBException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Visitor visitor = new RouteDefinitionPumlActivityImpl();
+        System.out.println(visitor.visit(newContext));
     }
+
+    @Test
+    public void JolokiaGetList() throws Exception {
+
+    }
+
+
+    @Test
+    public void readFromFile() throws JAXBException, IOException {
+        String xml = IOUtils.toString(this.getClass().getResource("/xml/route1.xml"), "UTF-8");
+        Utilities.generateActivityFromXml(xml, "route1.puml");
+    }
+
+
+
 
 }
 

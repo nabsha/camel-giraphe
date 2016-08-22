@@ -1,3 +1,8 @@
 # Introduction
+
 This utility generate a visual representation of all the camel routes defined within the given camel context
+
+
+curl -v -u username:password \http://host:port/hawtio/jolokia/exec/org.apache.camel:context=[context-id],type=routes,name=\"[route-id]\"/dumpRouteAsXml
+
 
