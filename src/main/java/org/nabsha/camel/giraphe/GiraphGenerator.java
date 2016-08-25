@@ -24,9 +24,7 @@ public class GiraphGenerator {
 
 
         client = new JolokiaClientBuilder()
-                .setUrl("http://svicf0000054np.nbndc.local:8181/hawtio/jolokia")
-                .setUsername("nabeelshaheen")
-                .setPassword("HE55-ixk-548")
+                .setUrl("http://localhost:8181/hawtio/jolokia")
                 .createJolokiaClient();
 
         logger.info("Requesting routes from " + client.getUrl());
